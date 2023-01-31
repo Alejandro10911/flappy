@@ -61,7 +61,7 @@ function draw() {
   // tecla presionada para crear dash, incrementar velocidad del viento, 
   // borrar elementos de array pipes[]
   if (keyIsPressed === true) {
-    if (key == ' ') {
+    if (key == 'd') {
       bird.dashRigth();
       for (var i = wind.length - 1; i >= 0; i--) {
         wind[i].increaseVelocity();
@@ -70,8 +70,13 @@ function draw() {
 
   }
   if (keyIsPressed === true) {
-    if (key == 'c') {
+    if (key == 'w') {
       bird.dashUp();
+    }
+  }
+  if (keyIsPressed === true) {
+    if (key == 's') {
+      bird.dashDownn();
     }
   }
 
@@ -174,6 +179,10 @@ function Bird() {
   }
   this.dashUp = function () {
     this.y -= this.velocityDash;
+    this.velocity = 0;
+  }
+  this.dashDownn = function () {
+    this.y += this.velocityDash;
     this.velocity = 0;
   }
 }
