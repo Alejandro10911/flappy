@@ -19,7 +19,7 @@ function setup() {
 function draw() {
   background(0, 0, 220);
 
-  for (var i = pipes.length - 1; i >= 0; i--) {
+  /* for (var i = pipes.length - 1; i >= 0; i--) {
     pipes[i].show();
     pipes[i].update();
 
@@ -30,6 +30,19 @@ function draw() {
     if (pipes[i].offscreen()) {
       pipes.splice(i, 1);
     }
+
+  } */
+  for (var i = 0; i < pipes.length; i++) {
+    pipes[i].show();
+    pipes[i].update();
+
+    if (pipes[i].hits(bird)) {
+      console.log("HIT");
+    }
+
+    /* if (pipes[i].offscreen()) {
+      pipes.splice(i, 1);
+    } */
 
   }
   console.log(wind.length);
@@ -119,13 +132,13 @@ function Pipe() {
     this.x -= this.speed;
   }
 
-  this.offscreen = function () {
+  /* this.offscreen = function () {
     if (this.x < - this.w) {
       return true
     } else {
       return false
     }
-  }
+  } */
 
 }
 
@@ -146,8 +159,8 @@ function Bird() {
   this.resetGame = function () {
     this.y = -40;
     this.x = width / 2 + width / 4;
-    //pipes = [];
-    //wind = [];
+    pipes = [];
+    wind = [];
   }
 
   this.show = function () {
