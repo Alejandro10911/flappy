@@ -1,37 +1,37 @@
+/* Proyecto basado de la lista de reprodución llamada 
+"Coding Challenges" del canal de youtube The Coding Train,
+en específico del video Coding challenge #31: Flappy Bird.
+
+Referencia:
+https://www.youtube.com/watch?v=cXgA1d_E-jY&t=797s */
+
+
 var bird;
 var pipes = [];
 var wind = [];
-var soundAmbience;
+var ambienceSound;
+var hitSound;
+var windSound;
 
 function preload() {
-  soundAmbience = loadSound('sounds/ambience.mp3');
-  pipes.push(new Pipe());
+  ambienceSound = loadSound('sounds/ambience.mp3');
+  hitSound = loadSound('sounds/lose_sound.mp3');
+  windSound = loadSound('sounds/wind.mp3');
 }
 
 function setup() {
   createCanvas(1000, 600);
   bird = new Bird();
-  soundAmbience.loop();
-  //pipes.push(new Pipe());
-  //wind.push(new Wind());
+  ambienceSound.setVolume(0.2);
+  hitSound.setVolume(0.1);
+  windSound.setVolume(0.7);
+  ambienceSound.loop();
+  windSound.loop();
 }
 
 function draw() {
   background(0, 0, 220);
 
-  /* for (var i = pipes.length - 1; i >= 0; i--) {
-    pipes[i].show();
-    pipes[i].update();
-
-    if (pipes[i].hits(bird)) {
-      console.log("HIT");
-    }
-
-    if (pipes[i].offscreen()) {
-      pipes.splice(i, 1);
-    }
-
-  } */
   for (var i = 0; i < pipes.length; i++) {
     pipes[i].show();
     pipes[i].update();
@@ -40,13 +40,15 @@ function draw() {
       console.log("HIT");
     }
 
-    /* if (pipes[i].offscreen()) {
-      pipes.splice(i, 1);
-    } */
+    if (pipes[i]) {
+      if (pipes[i].offscreen()) {
+        pipes.splice(i, 1);
+      }
+    }
 
   }
-  console.log(wind.length);
-  console.log(pipes.length);
+  //console.log(wind.length);
+  //console.log(pipes.length);
 
   for (var i = wind.length - 1; i >= 0; i--) {
     wind[i].update();
@@ -62,7 +64,7 @@ function draw() {
   bird.show();
 
   // añadir nuevo pipe en base al contador de frames 
-  if (frameCount % 50 == 0) {
+  if (frameCount % 60 == 0) {
     pipes.push(new Pipe());
   }
 
@@ -71,8 +73,7 @@ function draw() {
     wind.push(new Wind());
   }
 
-  // tecla presionada para crear dash, incrementar velocidad del viento, 
-  // borrar elementos de array pipes[]
+  // tecla presionada para crear dash, incrementar velocidad del viento
   if (keyIsPressed === true) {
     if (key == 'd') {
       bird.dashRigth();
@@ -114,8 +115,8 @@ function Pipe() {
 
 
   this.hits = function (bird) {
-    if (bird.y <= this.top + 40 || bird.y >= height - this.bottom - 40) {
-      if (bird.x >= this.x - 10 && bird.x <= this.x + this.w + 40) {
+    if (bird.y <= this.top + 30 || bird.y >= height - this.bottom - 30) {
+      if (bird.x >= this.x - 10 && bird.x <= this.x + this.w + 30) {
         bird.resetGame();
       }
     }
@@ -132,13 +133,13 @@ function Pipe() {
     this.x -= this.speed;
   }
 
-  /* this.offscreen = function () {
+  this.offscreen = function () {
     if (this.x < - this.w) {
       return true
     } else {
       return false
     }
-  } */
+  }
 
 }
 
@@ -148,19 +149,20 @@ function Bird() {
   this.x = width / 2 + width / 4;
 
   this.gravity = 0.6;
-  this.lift = -15;
+  this.lift = -25;
   this.velocity = 0;
-  this.force = 200;
+  this.force = 230;
   this.velocityDash = 20;
   this.red = 255;
   this.green = 255;
   this.blue = 255;
 
   this.resetGame = function () {
-    this.y = -40;
+    this.y = height / 4;
     this.x = width / 2 + width / 4;
     pipes = [];
     wind = [];
+    hitSound.play();
   }
 
   this.show = function () {
@@ -206,7 +208,7 @@ function Wind() {
   this.x = random(width + 20, width + 50);
   this.y = random(height);
   this.lenght = 80;
-  this.velocity = 15;
+  this.velocity = 25;
   this.velocityWhileDash = 40;
   this.w = 0;
 
